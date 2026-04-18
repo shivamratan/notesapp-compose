@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.AutoFixNormal
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
@@ -151,14 +153,46 @@ fun MyNotesDashboard(navController: NavController) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesDetailScreen(navController: NavController) {
+
+    val context = LocalContext.current
     BackHandler(true) {
         navController.popBackStack()
     }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Notes Detail Screen")
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {Text("Notes App")},
+                colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.secondary),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Menu")
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                onClick = {
+                    NotesUtil.showToast(context, "Floating Action Button Clicked")
+                }
+            ) {
+                Icon(Icons.Filled.AutoFixNormal, "Floating action button.")
+            }
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+            Text(text = "Notes Detail Screen")
+        }
     }
 }
 
