@@ -3,7 +3,7 @@ package com.ratanapps.notesapp.ui.notes.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,7 +46,7 @@ fun AppNavHost() {
         }
     ) {
         composable(route = Screen.Home.route) {
-            val mainViewModel: MainViewModel = viewModel()
+            val mainViewModel: MainViewModel = hiltViewModel()
             MyNotesDashboard(navController, mainViewModel)
         }
         composable(route = "${Screen.NotesDetail.route}?noteId={noteId}",
@@ -56,7 +56,7 @@ fun AppNavHost() {
                     defaultValue = -1
                 })
         ) {
-            val notesDetailViewModel: NotesDetailViewModel = viewModel()
+            val notesDetailViewModel: NotesDetailViewModel = hiltViewModel()
             val noteId = it.arguments?.getInt("noteId")
             NotesDetailScreen(navController, notesDetailViewModel, noteId)
         }

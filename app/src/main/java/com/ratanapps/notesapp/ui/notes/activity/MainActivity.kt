@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -43,6 +45,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +54,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
@@ -177,6 +183,23 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
         navController.popBackStack()
     }
 
+    val saveState by notesDetailViewModel.saveNoteState.collectAsState()
+
+    LaunchedEffect(saveState) {
+        when (saveState) {
+            is DatabaseResponse.Success -> {
+                NotesUtil.showToast(context, "Notes saved successfully")
+                navController.popBackStack()
+            }
+
+            is DatabaseResponse.Error -> {
+                NotesUtil.showToast(context, (saveState as DatabaseResponse.Error).message)
+            }
+
+            else -> Unit
+        }
+    }
+
     var titleText by remember { mutableStateOf("") }
     var notesBodyText by remember { mutableStateOf("") }
 
@@ -203,7 +226,7 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
                 onClick = {
                     //NotesUtil.showToast(context, "Floating Action Button Clicked")
                     if (titleText.isNotEmpty() && notesBodyText.isNotEmpty()) {
-
+                        notesDetailViewModel.saveNotesToDb(titleText, notesBodyText)
                     } else {
                         NotesUtil.showToast(context, "Please enter title and notes")
                     }
@@ -247,6 +270,18 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
                     shape = RoundedCornerShape(12.dp)
                 )
 
+            }
+
+            // 🔥 LOADER OVERLAY
+            if (saveState is DatabaseResponse.Loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
