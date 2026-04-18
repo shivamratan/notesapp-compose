@@ -13,11 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.AutoFixNormal
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,13 +35,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,10 +57,12 @@ import androidx.navigation.NavController
 import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
+import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
 import com.ratanapps.notesapp.ui.theme.NotesAppTheme
 import com.ratanapps.notesapp.utils.NotesUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.math.sin
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -68,7 +83,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyNotesDashboard(navController: NavController) {
+fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel) {
     val context = LocalContext.current
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -155,12 +170,15 @@ fun MyNotesDashboard(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesDetailScreen(navController: NavController) {
+fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesDetailViewModel, noteId: Int?) {
 
     val context = LocalContext.current
     BackHandler(true) {
         navController.popBackStack()
     }
+
+    var titleText by remember { mutableStateOf("") }
+    var notesBodyText by remember { mutableStateOf("") }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -183,15 +201,53 @@ fun NotesDetailScreen(navController: NavController) {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
                 onClick = {
-                    NotesUtil.showToast(context, "Floating Action Button Clicked")
+                    //NotesUtil.showToast(context, "Floating Action Button Clicked")
+                    if (titleText.isNotEmpty() && notesBodyText.isNotEmpty()) {
+
+                    } else {
+                        NotesUtil.showToast(context, "Please enter title and notes")
+                    }
                 }
             ) {
-                Icon(Icons.Filled.AutoFixNormal, "Floating action button.")
+                Icon(Icons.Filled.Save, "Save")
             }
         }
     ) { innerPadding ->
+
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-            Text(text = "Notes Detail Screen")
+            Column(modifier = Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.height(5.dp))
+
+                OutlinedTextField(
+                    value = titleText,
+                    onValueChange = {
+                        titleText = it
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, 5.dp),
+                    leadingIcon = {
+                        Icon(Icons.Default.Title, contentDescription = "Notes Title")
+                    },
+                    singleLine = true,
+                    placeholder = { Text("Note Title") },
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                OutlinedTextField(
+                    value = notesBodyText,
+                    onValueChange = {
+                        notesBodyText = it
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, 5.dp),
+                    minLines = 10,
+                    maxLines = 15,
+                    placeholder = { Text("Enter your note here...") },
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+            }
         }
     }
 }
@@ -214,6 +270,9 @@ fun HomeScreen(modifier: Modifier, navController: NavController) {
         }
     }
 }
+
+
+
 
 
 @Composable
