@@ -9,6 +9,7 @@ activityCompose = "1.13.0"
 kotlin = "2.2.10"
 composeBom = "2026.02.01"
 room = "2.8.4"
+navigationCompose = "2.8.8"
 ksp = "2.3.6"
 hilt = "2.59.2"
 composeIcons = "1.7.8"
@@ -34,6 +35,7 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeIcons" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

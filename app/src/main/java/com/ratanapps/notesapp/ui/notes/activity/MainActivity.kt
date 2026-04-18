@@ -2,9 +2,12 @@ package com.ratanapps.notesapp.ui.notes.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -29,10 +33,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
+import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
 import com.ratanapps.notesapp.ui.theme.NotesAppTheme
 import com.ratanapps.notesapp.utils.NotesUtil
@@ -49,7 +57,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotesAppTheme {
-                MyNotesDashboard()
+                AppNavHost()
             }
         }
     }
@@ -58,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyNotesDashboard() {
+fun MyNotesDashboard(navController: NavController) {
     val context = LocalContext.current
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -134,9 +142,9 @@ fun MyNotesDashboard() {
                     }
                 }
             ) { innerPadding ->
-                Greeting(
-                    name = "Android",
-                    modifier = Modifier.padding(innerPadding)
+                HomeScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
                 )
             }
         }
@@ -144,11 +152,50 @@ fun MyNotesDashboard() {
 }
 
 @Composable
+fun NotesDetailScreen(navController: NavController) {
+    BackHandler(true) {
+        navController.popBackStack()
+    }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Notes Detail Screen")
+    }
+}
+
+@Composable
+fun HomeScreen(modifier: Modifier, navController: NavController) {
+
+    val context = LocalContext.current
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "Home Screen",
+            modifier = modifier
+        )
+
+        Button(onClick = {
+            navController.navigate(Screen.NotesDetail.withArgs(5))
+            NotesUtil.showToast(context, "Navigating to Notes Detail");
+        }) {
+            Text(text = "Navigate to Notes Detail")
+        }
+    }
+}
+
+
+@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+
+        Button(onClick = {  }) {
+            Text(text = "Navigate to Notes Detail")
+        }
+    }
+
 }
 
 @Preview(showBackground = true)
