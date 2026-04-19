@@ -30,14 +30,18 @@ import androidx.compose.material.icons.filled.AutoFixNormal
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -49,6 +53,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -65,6 +70,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,6 +82,7 @@ import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
+import com.ratanapps.notesapp.ui.notes.uiutil.ComposeUtil.AlertDialogExample
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
 import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
 import com.ratanapps.notesapp.ui.theme.NotesAppTheme
@@ -351,7 +358,7 @@ fun HomeScreen(modifier: Modifier, navController: NavController, mainViewModel: 
         }
 
         is DatabaseResponse.Success -> {
-           NotesListSuccess(modifier,response.data, navController)
+           NotesListSuccess(modifier,response.data, navController, mainViewModel)
         }
 
         is DatabaseResponse.Error -> {
@@ -375,10 +382,17 @@ fun NotesListLoading(modifier: Modifier) {
 }
 
 @Composable
-fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, navController: NavController) {
+fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, navController: NavController, mainViewModel: MainViewModel) {
+    val context = LocalContext.current
+
     Box(modifier = modifier.fillMaxSize()) {
+        val openAlertDialog = remember { mutableStateOf(false) }
+        val clickedEntity = remember { mutableStateOf<NotesEntity?>(null) }
+
         LazyColumn(modifier = Modifier.fillMaxSize().padding(5.dp)) {
             items(notesEntityList.size) { index ->
+                var expanded by remember { mutableStateOf(false) }
+
                 Card(modifier = Modifier.fillMaxWidth().padding(5.dp),
                     elevation = CardDefaults.cardElevation(12.dp),
                     colors = CardColors(
@@ -391,12 +405,12 @@ fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, nav
                         navController.navigate(Screen.NotesDetail.withArgs(notesEntityList[index].id))
                     }
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(5.dp, 0.dp, 0.dp, 0.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth().padding(all = 5.dp), verticalAlignment = Alignment.CenterVertically) {
                         AlphabetAvatar(title = notesEntityList[index].notesTitle, modifier = Modifier.size(48.dp).align(Alignment.CenterVertically))
 
                         Spacer(modifier = Modifier.width(5.dp))
 
-                        Column(modifier = Modifier.fillMaxWidth().padding(5.dp)
+                        Column(modifier = Modifier.padding(5.dp).weight(1f)
                         ) {
                             Text(text = notesEntityList[index].notesTitle, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(1.dp))
@@ -408,9 +422,62 @@ fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, nav
                                 fontSize = 12.sp
                             )
                         }
+
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Box {
+                            IconButton(
+                                modifier = Modifier,
+                                onClick = { expanded = !expanded }) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "More options"
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Open") },
+                                    onClick = {
+                                        expanded = !expanded
+                                        navController.navigate(Screen.NotesDetail.withArgs(notesEntityList[index].id)) }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Modify") },
+                                    onClick = {
+                                        expanded = !expanded
+                                        navController.navigate(Screen.NotesDetail.withArgs(notesEntityList[index].id)) }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Delete") },
+                                    onClick = {
+                                        expanded = !expanded
+                                        openAlertDialog.value = true
+                                        clickedEntity.value = notesEntityList[index]
+                                    }
+                                )
+                            }
+                        }
+
                     }
                 }
             }
+        }
+
+        if (openAlertDialog.value) {
+            AlertDialogExample(
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = {
+                    openAlertDialog.value = false
+                    clickedEntity.value?.id?.let {
+                        mainViewModel.deleteNoteFromDb(it)
+                    }
+                },
+                dialogTitle = "Delete Note",
+                dialogText = "Are you sure want to delete the note ?"
+            )
         }
     }
 }

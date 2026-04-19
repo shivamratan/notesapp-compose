@@ -34,4 +34,16 @@ class MainViewModel @Inject constructor(val notesRepository: NotesRepository): V
         }
     }
 
+    fun deleteNoteFromDb(id: Int) {
+        viewModelScope.launch {
+            _saveState.value = DatabaseResponse.Loading
+            try {
+                notesRepository.deleteNotedById(id)
+                //_saveState.value = DatabaseResponse.Success(Unit)
+            } catch (exception: Exception) {
+                _saveState.value = DatabaseResponse.Error(exception.message ?: "Something went wrong")
+            }
+        }
+    }
+
 }
