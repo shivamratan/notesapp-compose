@@ -216,8 +216,37 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
         }
     }
 
+    val getNoteState by notesDetailViewModel.getNoteState.collectAsState()
+
+
     var titleText by remember { mutableStateOf("") }
     var notesBodyText by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        if (noteId != null && noteId != -1) {
+            notesDetailViewModel.getNoteById(noteId)
+        }
+    }
+
+    LaunchedEffect(getNoteState) {
+        when (val response = getNoteState) {
+            is DatabaseResponse.Success -> {
+                response.data?.let {
+                    titleText = it.notesTitle
+                    notesBodyText = it.notesContent
+                }
+
+            }
+
+            is DatabaseResponse.Error -> {
+                NotesUtil.showToast(context, response.message)
+            }
+
+            else -> {
+
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -242,7 +271,11 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
                 onClick = {
                     //NotesUtil.showToast(context, "Floating Action Button Clicked")
                     if (titleText.isNotEmpty() && notesBodyText.isNotEmpty()) {
-                        notesDetailViewModel.saveNotesToDb(titleText, notesBodyText)
+                        if (noteId != null && noteId != -1) {
+                            notesDetailViewModel.modifyNotesToDb(noteId = noteId, title = titleText, message = notesBodyText)
+                        } else {
+                            notesDetailViewModel.saveNotesToDb(title = titleText, message = notesBodyText)
+                        }
                     } else {
                         NotesUtil.showToast(context, "Please enter title and notes")
                     }
@@ -289,7 +322,7 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
             }
 
             // 🔥 LOADER OVERLAY
-            if (saveState is DatabaseResponse.Loading) {
+            if (saveState is DatabaseResponse.Loading || getNoteState is DatabaseResponse.Loading) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -318,7 +351,7 @@ fun HomeScreen(modifier: Modifier, navController: NavController, mainViewModel: 
         }
 
         is DatabaseResponse.Success -> {
-           NotesListSuccess(modifier,response.data)
+           NotesListSuccess(modifier,response.data, navController)
         }
 
         is DatabaseResponse.Error -> {
@@ -342,13 +375,21 @@ fun NotesListLoading(modifier: Modifier) {
 }
 
 @Composable
-fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>) {
+fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, navController: NavController) {
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize().padding(5.dp)) {
             items(notesEntityList.size) { index ->
                 Card(modifier = Modifier.fillMaxWidth().padding(5.dp),
                     elevation = CardDefaults.cardElevation(12.dp),
-                    colors = CardColors(containerColor = Color.White, Color.Black,Color.White, disabledContentColor = Color.LightGray)
+                    colors = CardColors(
+                        containerColor = Color.White,
+                        contentColor =  Color.Black,
+                        disabledContainerColor = Color.White,
+                        disabledContentColor = Color.LightGray),
+                    shape = RoundedCornerShape(5.dp),
+                    onClick = {
+                        navController.navigate(Screen.NotesDetail.withArgs(notesEntityList[index].id))
+                    }
                 ) {
                     Row(modifier = Modifier.fillMaxWidth().padding(5.dp, 0.dp, 0.dp, 0.dp)) {
                         AlphabetAvatar(title = notesEntityList[index].notesTitle, modifier = Modifier.size(48.dp).align(Alignment.CenterVertically))

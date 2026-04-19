@@ -20,4 +20,19 @@ class NotesRepository @Inject constructor(private val notesDao: NotesDao) {
             )
         }
     }
+
+    suspend fun getNoteById(id: Int) = notesDao.getNoteById(id)
+
+    suspend fun modifyNotesToDb(noteId: Int, title: String, content: String) {
+        notesDao.apply {
+            updateNote(
+                NotesEntity(
+                    id = noteId,
+                    notesTitle = title,
+                    notesContent =  content,
+                    timeStamp = NotesUtil.getCurrentTimeStamp()
+                )
+            )
+        }
+    }
 }
