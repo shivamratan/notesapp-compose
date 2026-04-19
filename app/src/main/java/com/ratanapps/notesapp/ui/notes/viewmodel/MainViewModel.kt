@@ -1,14 +1,37 @@
 package com.ratanapps.notesapp.ui.notes.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ratanapps.notesapp.data.local.dao.NotesDao
+import com.ratanapps.notesapp.data.local.entity.NotesEntity
+import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.data.repo.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class MainViewModel @Inject constructor(notesDao: NotesDao, notesRepository: NotesRepository): ViewModel() {
+class MainViewModel @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 
+    private val _saveState = MutableStateFlow<DatabaseResponse<List<NotesEntity>>>(DatabaseResponse.Idle)
 
+    val getAllNoteState: StateFlow<DatabaseResponse<List<NotesEntity>>> = _saveState
+
+    fun getAllNotesFromDb()  {
+        viewModelScope.launch {
+            _saveState.value = DatabaseResponse.Loading
+            try {
+                 notesRepository.getAllNotes().collect { notesList ->
+                     _saveState.value = DatabaseResponse.Success(notesList)
+                 }
+
+            } catch (exception: Exception) {
+                _saveState.value = DatabaseResponse.Error(exception.message ?: "Something went wrong")
+            }
+        }
+    }
 
 }

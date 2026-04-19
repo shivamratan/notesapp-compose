@@ -13,16 +13,16 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class NotesDetailViewModel  @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 
-    private val _saveState = MutableStateFlow<DatabaseResponse<Nothing>>(DatabaseResponse.Idle)
+    private val _saveState = MutableStateFlow<DatabaseResponse<Unit>>(DatabaseResponse.Idle)
 
-    val saveNoteState: StateFlow<DatabaseResponse<Nothing>> = _saveState;
+    val saveNoteState: StateFlow<DatabaseResponse<Unit>> = _saveState;
 
     fun saveNotesToDb(title: String, message: String)  {
         viewModelScope.launch {
             _saveState.value = DatabaseResponse.Loading
             try {
                 notesRepository.addNotesToDb(title = title, content = message)
-                _saveState.value = DatabaseResponse.Success
+                _saveState.value = DatabaseResponse.Success(Unit)
             } catch (exception: Exception) {
                 _saveState.value = DatabaseResponse.Error(exception.message ?: "Something went wrong")
             }
