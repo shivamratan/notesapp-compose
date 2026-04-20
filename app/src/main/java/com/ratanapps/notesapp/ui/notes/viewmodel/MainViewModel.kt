@@ -8,6 +8,7 @@ import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.data.repo.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,16 @@ class MainViewModel @Inject constructor(val notesRepository: NotesRepository): V
     private val _saveState = MutableStateFlow<DatabaseResponse<List<NotesEntity>>>(DatabaseResponse.Idle)
 
     val getAllNoteState: StateFlow<DatabaseResponse<List<NotesEntity>>> = _saveState
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    init {
+        viewModelScope.launch {
+            delay(1500)
+            _isLoading.value = false
+        }
+    }
 
     fun getAllNotesFromDb()  {
         viewModelScope.launch {
