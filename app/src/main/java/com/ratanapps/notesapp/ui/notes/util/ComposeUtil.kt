@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.uiutil
+package com.ratanapps.notesapp.ui.notes.util
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

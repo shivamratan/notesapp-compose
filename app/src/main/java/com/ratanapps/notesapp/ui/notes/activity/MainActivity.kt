@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,19 +20,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.AutoFixNormal
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Title
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -53,8 +46,6 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
@@ -70,7 +61,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,15 +72,13 @@ import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
-import com.ratanapps.notesapp.ui.notes.uiutil.ComposeUtil.AlertDialogExample
+import com.ratanapps.notesapp.ui.notes.util.ComposeUtil.AlertDialogExample
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
 import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
 import com.ratanapps.notesapp.ui.theme.NotesAppTheme
 import com.ratanapps.notesapp.utils.NotesUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlin.math.sin
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -121,14 +109,20 @@ fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel)
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.7f)) {
-                Text("Drawer title", modifier = Modifier.padding(16.dp))
+                Text(text = "Notes App",
+                    modifier = Modifier.padding(16.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+
                 Spacer(modifier = Modifier.height(5.dp))
 
                 NavigationDrawerItem(
                     label = { Text("Compose Note") },
                     selected = false,
                     onClick = {
-                        NotesUtil.showToast(context, "Compose Note Item Clicked")
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.NotesDetail.withArgs(-1))
                     }
                 )
 
@@ -137,7 +131,7 @@ fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel)
                     label = { Text("Note List") },
                     selected = false,
                     onClick = {
-                        NotesUtil.showToast(context, "Note List Clicked")
+                        scope.launch { drawerState.close() }
                     }
                 )
 
@@ -146,7 +140,8 @@ fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel)
                     label = { Text("About") },
                     selected = false,
                     onClick = {
-                        NotesUtil.showToast(context, "About Clicked")
+                        scope.launch { drawerState.close() }
+                        NotesUtil.showToast(context, "About Section")
                     }
                 )
             }
