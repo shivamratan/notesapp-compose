@@ -1,8 +1,10 @@
 package com.ratanapps.notesapp.ui.notes.navigation
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,6 +19,7 @@ import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController();
+    val context = LocalContext.current
 
     NavHost(navController = navController,
         startDestination = Screen.Home.route,
@@ -46,7 +49,7 @@ fun AppNavHost() {
         }
     ) {
         composable(route = Screen.Home.route) {
-            val mainViewModel: MainViewModel = hiltViewModel()
+            val mainViewModel: MainViewModel = hiltViewModel(context as ComponentActivity)
             MyNotesDashboard(navController, mainViewModel)
         }
         composable(route = "${Screen.NotesDetail.route}?noteId={noteId}",

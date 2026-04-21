@@ -45,6 +45,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -68,21 +69,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.ui.notes.navigation.AppNavHost
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
+import com.ratanapps.notesapp.ui.notes.util.ComposeUtil
 import com.ratanapps.notesapp.ui.notes.util.ComposeUtil.AlertDialogExample
 import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
 import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
 import com.ratanapps.notesapp.ui.theme.NotesAppTheme
+import com.ratanapps.notesapp.utils.NotesConstant
 import com.ratanapps.notesapp.utils.NotesUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -97,7 +97,12 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            NotesAppTheme {
+
+            val isDark by viewModel.isDark
+
+            NotesAppTheme(darkTheme = isDark) {
+               // Log.e(NotesConstant.MAINACTIVITY_TAG, "Theme is ${ if (isDark) "Dark" else "Light" }")
+                ComposeUtil.showErrorLogs(NotesConstant.MAINACTIVITY_TAG, "Theme is ${if (isDark) "isDark" else "isLight"}")
                 AppNavHost()
             }
         }
@@ -110,6 +115,7 @@ class MainActivity : ComponentActivity() {
 fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel) {
     val context = LocalContext.current
 
+    val isDark by mainViewModel.isDark
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -176,6 +182,12 @@ fun MyNotesDashboard(navController: NavController, mainViewModel: MainViewModel)
                             ) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu")
                             }
+                        },
+                        actions = {
+                            Switch(
+                                checked = isDark,
+                                onCheckedChange = { mainViewModel.isDark.value = it }
+                            )
                         }
                     )
                 },
@@ -397,32 +409,30 @@ fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, nav
                 var expanded by remember { mutableStateOf(false) }
 
                 Card(modifier = Modifier.fillMaxWidth().padding(5.dp),
-                    elevation = CardDefaults.cardElevation(12.dp),
-                    colors = CardColors(
-                        containerColor = Color.White,
-                        contentColor =  Color.Black,
-                        disabledContainerColor = Color.White,
-                        disabledContentColor = Color.LightGray),
-                    shape = RoundedCornerShape(5.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    shape = RoundedCornerShape(12.dp),
                     onClick = {
                         navController.navigate(Screen.NotesDetail.withArgs(notesEntityList[index].id))
                     }
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(all = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-                        AlphabetAvatar(title = notesEntityList[index].notesTitle, modifier = Modifier.size(48.dp).align(Alignment.CenterVertically))
+                    Row(modifier = Modifier.fillMaxWidth().padding(all = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        AlphabetAvatar(title = notesEntityList[index].notesTitle, modifier = Modifier.size(48.dp))
 
                         Spacer(modifier = Modifier.width(5.dp))
 
                         Column(modifier = Modifier.padding(5.dp).weight(1f)
                         ) {
-                            Text(text = notesEntityList[index].notesTitle, fontWeight = FontWeight.Bold)
-                            Spacer(modifier = Modifier.height(1.dp))
-                            Text(text = notesEntityList[index].notesContent)
-                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(text = notesEntityList[index].notesTitle, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                            Text(text = notesEntityList[index].notesContent, style = MaterialTheme.typography.bodyMedium, maxLines = 2)
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(text = notesEntityList[index].timeStamp,
-                                color = Color.LightGray,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.align(Alignment.Start),
-                                fontSize = 12.sp
+                                style = MaterialTheme.typography.labelSmall
                             )
                         }
 

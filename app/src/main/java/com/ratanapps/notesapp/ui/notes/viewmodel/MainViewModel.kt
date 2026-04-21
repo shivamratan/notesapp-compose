@@ -1,5 +1,6 @@
 package com.ratanapps.notesapp.ui.notes.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ratanapps.notesapp.data.local.dao.NotesDao
@@ -23,6 +24,9 @@ class MainViewModel @Inject constructor(val notesRepository: NotesRepository): V
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
+
+    var isDark = mutableStateOf(false)
+
 
     init {
         viewModelScope.launch {
