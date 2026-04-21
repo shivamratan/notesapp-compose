@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.viewmodel
+package com.ratanapps.notesapp.ui.notes.features.details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,8 @@ class NotesDetailViewModel  @Inject constructor(val notesRepository: NotesReposi
     val saveNoteState: StateFlow<DatabaseResponse<Unit>> = _saveState;
 
 
-    private val _getNoteState = MutableStateFlow<DatabaseResponse<NotesEntity?>>(DatabaseResponse.Idle)
+    private val _getNoteState =
+        MutableStateFlow<DatabaseResponse<NotesEntity?>>(DatabaseResponse.Idle)
     val getNoteState: StateFlow<DatabaseResponse<NotesEntity?>> = _getNoteState;
 
 

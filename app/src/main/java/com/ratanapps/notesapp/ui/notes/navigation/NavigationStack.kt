@@ -11,10 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ratanapps.notesapp.ui.notes.activity.MyNotesDashboard
-import com.ratanapps.notesapp.ui.notes.activity.NotesDetailScreen
-import com.ratanapps.notesapp.ui.notes.viewmodel.MainViewModel
-import com.ratanapps.notesapp.ui.notes.viewmodel.NotesDetailViewModel
+import com.ratanapps.notesapp.ui.notes.features.details.NotesDetailScreen
+import com.ratanapps.notesapp.ui.notes.features.details.viewmodel.NotesDetailViewModel
+import com.ratanapps.notesapp.ui.notes.features.home.NotesListRoute
+import com.ratanapps.notesapp.ui.notes.features.home.viewmodel.MainViewModel
 
 @Composable
 fun AppNavHost() {
@@ -50,7 +50,7 @@ fun AppNavHost() {
     ) {
         composable(route = Screen.Home.route) {
             val mainViewModel: MainViewModel = hiltViewModel(context as ComponentActivity)
-            MyNotesDashboard(navController, mainViewModel)
+            NotesListRoute(navController, mainViewModel)
         }
         composable(route = "${Screen.NotesDetail.route}?noteId={noteId}",
             arguments = listOf(

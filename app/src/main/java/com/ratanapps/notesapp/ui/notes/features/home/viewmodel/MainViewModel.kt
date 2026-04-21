@@ -1,16 +1,14 @@
-package com.ratanapps.notesapp.ui.notes.viewmodel
+package com.ratanapps.notesapp.ui.notes.features.home.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratanapps.notesapp.data.local.dao.NotesDao
 import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.data.repo.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +16,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 
-    private val _saveState = MutableStateFlow<DatabaseResponse<List<NotesEntity>>>(DatabaseResponse.Idle)
+    private val _saveState =
+        MutableStateFlow<DatabaseResponse<List<NotesEntity>>>(DatabaseResponse.Idle)
 
     val getAllNoteState: StateFlow<DatabaseResponse<List<NotesEntity>>> = _saveState
 
