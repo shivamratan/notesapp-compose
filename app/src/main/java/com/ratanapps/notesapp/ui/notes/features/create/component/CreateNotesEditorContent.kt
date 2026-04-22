@@ -16,6 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * The main content area for the Create/Edit Notes screen.
+ * Contains input fields for the note's title and body content.
+ *
+ * @param titleText The current text value of the note title.
+ * @param onTitleChange Callback triggered when the title text is modified.
+ * @param notesBodyText The current text value of the note body.
+ * @param onBodyChange Callback triggered when the body text is modified.
+ */
 @Composable
 fun CreateNotesEditorContent(
     titleText: String,

@@ -16,6 +16,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * A circular avatar component that displays the first letter of a title.
+ * The background color is randomly selected from a predefined list of Material colors.
+ *
+ * @param title The text from which the first letter will be extracted.
+ * @param modifier Modifier for the avatar container.
+ * @param size The diameter of the circular avatar. Defaults to 48.dp.
+ */
 @Composable
 fun AlphabetAvatar(title: String, modifier: Modifier, size: Dp =48.dp) {
     val letter = title.trim().firstOrNull()?.uppercase() ?: "?"

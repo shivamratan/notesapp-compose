@@ -13,6 +13,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the Home screen (Notes List).
+ *
+ * Manages the state for the list of notes, loading status for the splash screen,
+ * and global app settings like the dark theme toggle.
+ *
+ * @property notesRepository The repository used for database operations.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 

@@ -9,6 +9,14 @@ import androidx.navigation.NavController
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.ui.notes.features.home.viewmodel.MainViewModel
 
+/**
+ * The main container for the home screen content.
+ * Observes the note list state and switches between Loading, Success, and Error views.
+ *
+ * @param modifier Modifier for the root container.
+ * @param navController Controller for navigating to other screens.
+ * @param mainViewModel ViewModel providing the state of all notes.
+ */
 @Composable
 fun NotesListScreen(modifier: Modifier, navController: NavController, mainViewModel: MainViewModel) {
 

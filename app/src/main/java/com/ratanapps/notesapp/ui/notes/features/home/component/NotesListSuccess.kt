@@ -40,6 +40,15 @@ import com.ratanapps.notesapp.ui.notes.features.home.viewmodel.MainViewModel
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import kotlin.text.get
 
+/**
+ * Displays the list of notes when successfully retrieved from the database.
+ * Handles the display of the [LazyColumn] and the deletion confirmation dialog.
+ *
+ * @param modifier Modifier for the container box.
+ * @param notesEntityList The list of notes to display.
+ * @param navController Controller for navigating to note details.
+ * @param mainViewModel ViewModel for handling note deletion.
+ */
 @Composable
 fun NotesListSuccess(modifier: Modifier, notesEntityList: List<NotesEntity>, navController: NavController, mainViewModel: MainViewModel) {
     val openAlertDialog = remember { mutableStateOf(false) }

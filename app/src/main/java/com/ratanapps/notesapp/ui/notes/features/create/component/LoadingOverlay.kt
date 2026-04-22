@@ -9,6 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
+/**
+ * A full-screen overlay component that displays a loading indicator.
+ * Used to block user interaction and provide visual feedback during background operations
+ * like saving or fetching a note.
+ */
 @Composable
 fun LoadingOverlay() {
     Box(

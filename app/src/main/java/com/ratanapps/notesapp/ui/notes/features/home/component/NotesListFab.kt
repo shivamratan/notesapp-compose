@@ -7,6 +7,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
+/**
+ * Floating Action Button (FAB) for the home screen to trigger note creation.
+ *
+ * @param onFabClick Callback triggered when the FAB is clicked.
+ */
 @Composable
 fun NotesListFab(onFabClick: ()->Unit) {
     FloatingActionButton(

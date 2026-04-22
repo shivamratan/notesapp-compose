@@ -9,6 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
+/**
+ * A loading overlay for the home screen.
+ * Displays a centered progress indicator over a semi-transparent background.
+ *
+ * @param modifier Modifier for the container box.
+ */
 @Composable
 fun NotesListLoading(modifier: Modifier) {
     Box(

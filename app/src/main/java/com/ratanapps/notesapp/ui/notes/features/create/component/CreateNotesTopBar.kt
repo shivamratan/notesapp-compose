@@ -11,6 +11,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 
+/**
+ * A TopAppBar component for the Create/Edit Notes screen.
+ * Displays the screen title and a back navigation button.
+ *
+ * @param onBackClick Callback to be executed when the back button is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateNotesTopBar(onBackClick: ()->Unit) {

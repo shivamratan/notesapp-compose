@@ -23,6 +23,17 @@ import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.ui.notes.features.common.AlphabetAvatar
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
 
+/**
+ * A single item in the notes list.
+ *
+ * Displays a note's title, a snippet of its content, a timestamp, and an avatar.
+ * Includes a dropdown menu for additional actions.
+ *
+ * @param notesEntity The data entity representing the note.
+ * @param navController Controller for navigating to details or edit screens.
+ * @param onItemClicked Callback triggered when the card is clicked.
+ * @param onDeleteMenuItemClicked Callback triggered when "Delete" is selected from the menu.
+ */
 @Composable
 fun NotesListItem(notesEntity: NotesEntity, navController: NavController, onItemClicked: ()->Unit, onDeleteMenuItemClicked: ()->Unit) {
 

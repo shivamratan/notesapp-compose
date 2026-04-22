@@ -5,6 +5,14 @@ import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.utils.NotesUtil
 import jakarta.inject.Inject
 
+/**
+ * Repository class that acts as a single source of truth for all notes data.
+ *
+ * It abstracts the data source (NotesDao) from the UI layer and provides
+ * clean methods for database operations.
+ *
+ * @property notesDao The Data Access Object for Room database operations.
+ */
 class NotesRepository @Inject constructor(private val notesDao: NotesDao) {
 
     suspend fun getAllNotes() = notesDao.getAllNotes()

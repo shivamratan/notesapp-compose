@@ -22,6 +22,15 @@ import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import kotlinx.coroutines.launch
 
 
+/**
+ * The main route for the Notes List screen.
+ *
+ * This composable sets up the [ModalNavigationDrawer] and [Scaffold] for the home screen.
+ * It manages the drawer state, theme switching, and navigation to note details.
+ *
+ * @param navController Controller for navigating between screens.
+ * @param mainViewModel ViewModel for managing home screen state and theme.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesListRoute(navController: NavController, mainViewModel: MainViewModel) {

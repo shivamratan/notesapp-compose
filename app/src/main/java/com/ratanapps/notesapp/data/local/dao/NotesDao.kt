@@ -8,6 +8,12 @@ import androidx.room.Update
 import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Data Access Object (DAO) for the notes table.
+ * 
+ * Defines the database interactions such as querying, inserting, updating, 
+ * and deleting notes.
+ */
 @Dao
 interface NotesDao {
 

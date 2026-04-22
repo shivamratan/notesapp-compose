@@ -16,6 +16,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.ratanapps.notesapp.ui.notes.navigation.Screen
 
+/**
+ * A dropdown menu for individual note items.
+ * Provides options to open, modify, or delete a specific note.
+ *
+ * @param onOpenItemClicked Callback for the "Open" action.
+ * @param onModifyItemClicked Callback for the "Modify" action.
+ * @param onDeleteItemClicked Callback for the "Delete" action.
+ */
 @Composable
 fun NotesItemDropdownMenu(onOpenItemClicked: ()->Unit, onModifyItemClicked: ()->Unit, onDeleteItemClicked: ()->Unit) {
     var expanded by remember { mutableStateOf(false) }

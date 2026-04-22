@@ -16,6 +16,12 @@ import com.ratanapps.notesapp.ui.notes.features.create.viewmodel.CreateNotesView
 import com.ratanapps.notesapp.ui.notes.features.home.NotesListRoute
 import com.ratanapps.notesapp.ui.notes.features.home.viewmodel.MainViewModel
 
+/**
+ * The main Navigation Graph for the application.
+ *
+ * Defines the destinations and transition animations for the app.
+ * Uses Activity-scoped ViewModels where necessary to maintain shared state (like themes).
+ */
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController();

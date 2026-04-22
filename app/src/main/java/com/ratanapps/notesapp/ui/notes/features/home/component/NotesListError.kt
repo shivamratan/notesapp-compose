@@ -7,6 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * Error state component for the home screen.
+ * Displays a generic error message when note retrieval fails.
+ *
+ * @param modifier Modifier for the container box.
+ */
 @Composable
 fun NoteListError(modifier: Modifier) {
     Box(modifier = modifier.fillMaxSize()) {

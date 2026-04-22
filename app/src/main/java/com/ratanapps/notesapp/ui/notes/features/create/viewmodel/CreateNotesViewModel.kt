@@ -14,6 +14,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the Create/Edit Notes screen.
+ *
+ * Manages the UI state, text inputs, and database operations for creating,
+ * modifying, and fetching individual notes.
+ *
+ * @property notesRepository The repository for data access.
+ */
 @HiltViewModel
 class CreateNotesViewModel  @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 
@@ -89,6 +97,12 @@ class CreateNotesViewModel  @Inject constructor(val notesRepository: NotesReposi
 
 }
 
+/**
+ * Data class representing the UI state for text inputs in the Create Notes screen.
+ *
+ * @property title The current text in the title field.
+ * @property body The current text in the body/content field.
+ */
 data class CreateNotesUiState(
     val title: String = "",
     val body: String = ""

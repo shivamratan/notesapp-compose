@@ -12,6 +12,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 
+/**
+ * The top app bar for the home screen.
+ * Contains a navigation menu icon (hamburger), app title, and a theme toggle switch.
+ *
+ * @param onHamburgerClick Callback triggered when the menu icon is clicked.
+ * @param onThemeCheckChange Callback triggered when the theme switch is toggled.
+ * @param isDark The current theme state (true for dark mode).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesListTopAppBar(onHamburgerClick: ()->Unit, onThemeCheckChange: (Boolean)->Unit, isDark: Boolean) {

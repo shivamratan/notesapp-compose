@@ -28,6 +28,17 @@ import com.ratanapps.notesapp.ui.notes.features.create.viewmodel.CreateNotesView
 import com.ratanapps.notesapp.utils.NotesUtil
 
 
+/**
+ * Screen for creating and editing notes.
+ *
+ * This composable manages the UI for inputting a note's title and content,
+ * handles database operations (save, update, fetch) via the [CreateNotesViewModel],
+ * and provides navigation and loading feedback.
+ *
+ * @param navController Controller for navigating back to the previous screen.
+ * @param createNotesViewModel ViewModel containing state and logic for this screen.
+ * @param noteId The ID of the note to edit, or null/ -1 if creating a new note.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateNotesScreen(navController: NavController, createNotesViewModel: CreateNotesViewModel, noteId: Int?) {

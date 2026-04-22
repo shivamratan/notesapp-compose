@@ -14,6 +14,12 @@ import com.ratanapps.notesapp.ui.theme.NotesAppTheme
 import com.ratanapps.notesapp.utils.NotesConstant
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * The main entry point for the Notes application.
+ *
+ * This activity handles the splash screen initialization, sets up the edge-to-edge
+ * display, and hosts the root Composable theme and navigation host.
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

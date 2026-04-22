@@ -16,6 +16,14 @@ import com.ratanapps.notesapp.ui.notes.navigation.Screen
 import com.ratanapps.notesapp.utils.NotesUtil
 import kotlinx.coroutines.launch
 
+/**
+ * The navigation drawer content for the home screen.
+ * Provides navigation links to compose a note, view the note list, or see about information.
+ *
+ * @param onComposeNoteClicked Callback for the "Compose Note" item.
+ * @param onNoteListClicked Callback for the "Note List" item.
+ * @param onAboutClicked Callback for the "About" item.
+ */
 @Composable
 fun NotesListNavDrawerSheet(onComposeNoteClicked: ()->Unit, onNoteListClicked: ()->Unit, onAboutClicked: ()->Unit) {
     ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.7f)) {
