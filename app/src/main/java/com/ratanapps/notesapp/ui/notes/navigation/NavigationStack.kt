@@ -11,8 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ratanapps.notesapp.ui.notes.features.details.NotesDetailScreen
-import com.ratanapps.notesapp.ui.notes.features.details.viewmodel.NotesDetailViewModel
+import com.ratanapps.notesapp.ui.notes.features.create.CreateNotesScreen
+import com.ratanapps.notesapp.ui.notes.features.create.viewmodel.CreateNotesViewModel
 import com.ratanapps.notesapp.ui.notes.features.home.NotesListRoute
 import com.ratanapps.notesapp.ui.notes.features.home.viewmodel.MainViewModel
 
@@ -59,9 +59,9 @@ fun AppNavHost() {
                     defaultValue = -1
                 })
         ) {
-            val notesDetailViewModel: NotesDetailViewModel = hiltViewModel()
+            val createNotesViewModel: CreateNotesViewModel = hiltViewModel()
             val noteId = it.arguments?.getInt("noteId")
-            NotesDetailScreen(navController, notesDetailViewModel, noteId)
+            CreateNotesScreen(navController, createNotesViewModel, noteId)
         }
     }
 

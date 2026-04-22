@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.features.details.component
+package com.ratanapps.notesapp.ui.notes.features.create.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 
 
 @Composable
-fun NotesDetailFab(onClick: () -> Unit) {
+fun CreateNotesFab(onClick: () -> Unit) {
     FloatingActionButton(
         containerColor = MaterialTheme.colorScheme.primary,
         onClick = {

@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.features.details.component
+package com.ratanapps.notesapp.ui.notes.features.create.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesDetailTopBar(onBackClick: ()->Unit) {
+fun CreateNotesTopBar(onBackClick: ()->Unit) {
     TopAppBar(
         title = {Text("Notes App")},
         colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.secondary),

@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.features.details.component
+package com.ratanapps.notesapp.ui.notes.features.create.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

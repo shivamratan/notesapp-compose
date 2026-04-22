@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.features.details.component
+package com.ratanapps.notesapp.ui.notes.features.create.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NotesDetailEditorContent(
+fun CreateNotesEditorContent(
     titleText: String,
     onTitleChange: (String) -> Unit,
     notesBodyText: String,

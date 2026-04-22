@@ -1,18 +1,21 @@
-package com.ratanapps.notesapp.ui.notes.features.details.viewmodel
+package com.ratanapps.notesapp.ui.notes.features.create.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ratanapps.notesapp.data.local.entity.NotesEntity
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
 import com.ratanapps.notesapp.data.repo.NotesRepository
+import com.ratanapps.notesapp.utils.NotesUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class NotesDetailViewModel  @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
+class CreateNotesViewModel  @Inject constructor(val notesRepository: NotesRepository): ViewModel() {
 
     private val _saveState = MutableStateFlow<DatabaseResponse<Unit>>(DatabaseResponse.Idle)
     val saveNoteState: StateFlow<DatabaseResponse<Unit>> = _saveState;
@@ -21,6 +24,30 @@ class NotesDetailViewModel  @Inject constructor(val notesRepository: NotesReposi
     private val _getNoteState =
         MutableStateFlow<DatabaseResponse<NotesEntity?>>(DatabaseResponse.Idle)
     val getNoteState: StateFlow<DatabaseResponse<NotesEntity?>> = _getNoteState;
+
+
+    private val _createNotesUiState = MutableStateFlow(CreateNotesUiState())
+    val createNotesUiState: StateFlow<CreateNotesUiState> = _createNotesUiState.asStateFlow()
+
+
+    fun onTitleChange(newTitle: String) {
+        _createNotesUiState.update { it.copy(title = newTitle) }
+    }
+
+    fun onBodyChange(newContent: String) {
+        _createNotesUiState.update { it.copy(body = newContent) }
+    }
+
+    fun onSaveFabClicked(notesId: Int?) {
+        val currentCreateNotesUiState = createNotesUiState.value;
+        if (currentCreateNotesUiState.title.isNotEmpty() && currentCreateNotesUiState.body.isNotEmpty()) {
+            if (notesId != null && notesId != -1) {
+                modifyNotesToDb(noteId = notesId, title = currentCreateNotesUiState.title, message = currentCreateNotesUiState.body)
+            } else {
+                saveNotesToDb(title = currentCreateNotesUiState.title, message = currentCreateNotesUiState.body)
+            }
+        }
+    }
 
 
     fun saveNotesToDb(title: String, message: String)  {
@@ -61,3 +88,8 @@ class NotesDetailViewModel  @Inject constructor(val notesRepository: NotesReposi
     }
 
 }
+
+data class CreateNotesUiState(
+    val title: String = "",
+    val body: String = ""
+)

@@ -1,4 +1,4 @@
-package com.ratanapps.notesapp.ui.notes.features.details
+package com.ratanapps.notesapp.ui.notes.features.create
 
 import android.content.Context
 import androidx.activity.compose.BackHandler
@@ -19,24 +19,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.ratanapps.notesapp.data.local.util.DatabaseResponse
-import com.ratanapps.notesapp.ui.notes.features.details.component.LoadingOverlay
-import com.ratanapps.notesapp.ui.notes.features.details.component.NotesDetailEditorContent
-import com.ratanapps.notesapp.ui.notes.features.details.component.NotesDetailFab
-import com.ratanapps.notesapp.ui.notes.features.details.component.NotesDetailTopBar
-import com.ratanapps.notesapp.ui.notes.features.details.viewmodel.NotesDetailViewModel
+import com.ratanapps.notesapp.ui.notes.features.create.component.LoadingOverlay
+import com.ratanapps.notesapp.ui.notes.features.create.component.CreateNotesEditorContent
+import com.ratanapps.notesapp.ui.notes.features.create.component.CreateNotesFab
+import com.ratanapps.notesapp.ui.notes.features.create.component.CreateNotesTopBar
+import com.ratanapps.notesapp.ui.notes.features.create.viewmodel.CreateNotesUiState
+import com.ratanapps.notesapp.ui.notes.features.create.viewmodel.CreateNotesViewModel
 import com.ratanapps.notesapp.utils.NotesUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesDetailViewModel, noteId: Int?) {
+fun CreateNotesScreen(navController: NavController, createNotesViewModel: CreateNotesViewModel, noteId: Int?) {
 
     val context = LocalContext.current
-    val saveState by notesDetailViewModel.saveNoteState.collectAsState()
-    val getNoteState by notesDetailViewModel.getNoteState.collectAsState()
-
-    var titleText by remember { mutableStateOf("") }
-    var notesBodyText by remember { mutableStateOf("") }
+    val saveState by createNotesViewModel.saveNoteState.collectAsState()
+    val getNoteState by createNotesViewModel.getNoteState.collectAsState()
+    val createNotesUiState by createNotesViewModel.createNotesUiState.collectAsState()
 
     BackHandler(true) {
         navController.popBackStack()
@@ -57,7 +56,7 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
 
     LaunchedEffect(Unit) {
         if (noteId != null && noteId != -1) {
-            notesDetailViewModel.getNoteById(noteId)
+            createNotesViewModel.getNoteById(noteId)
         }
     }
 
@@ -65,8 +64,8 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
         when (val response = getNoteState) {
             is DatabaseResponse.Success -> {
                 response.data?.let {
-                    titleText = it.notesTitle
-                    notesBodyText = it.notesContent
+                    createNotesViewModel.onTitleChange(it.notesTitle)
+                    createNotesViewModel.onBodyChange(it.notesContent)
                 }
             }
             is DatabaseResponse.Error -> {
@@ -79,40 +78,31 @@ fun NotesDetailScreen(navController: NavController, notesDetailViewModel: NotesD
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            NotesDetailTopBar {
+            CreateNotesTopBar {
                 navController.popBackStack()
             }
         },
         floatingActionButton = {
-            NotesDetailFab(onClick = {
-                //NotesUtil.showToast(context, "Floating Action Button Clicked")
-                onFabClick(titleText, notesBodyText, noteId, context, notesDetailViewModel)
+            CreateNotesFab(onClick = {
+                if (createNotesUiState.title.isEmpty() || createNotesUiState.body.isEmpty()) {
+                    NotesUtil.showToast(context, "Please enter title and body")
+                } else {
+                    createNotesViewModel.onSaveFabClicked(noteId)
+                }
             })
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-            NotesDetailEditorContent(
-                titleText = titleText,
-                onTitleChange = { titleText = it },
-                notesBodyText = notesBodyText,
-                onBodyChange = { notesBodyText = it }
+            CreateNotesEditorContent(
+                titleText = createNotesUiState.title,
+                onTitleChange = { createNotesViewModel.onTitleChange(it) },
+                notesBodyText = createNotesUiState.body,
+                onBodyChange = { createNotesViewModel.onBodyChange(it) }
             )
 
             if (saveState is DatabaseResponse.Loading || getNoteState is DatabaseResponse.Loading) {
                 LoadingOverlay()
             }
         }
-    }
-}
-
-private fun onFabClick(titleText: String, notesBodyText: String, noteId: Int?, context: Context, notesDetailViewModel: NotesDetailViewModel) {
-    if (titleText.isNotEmpty() && notesBodyText.isNotEmpty()) {
-        if (noteId != null && noteId != -1) {
-            notesDetailViewModel.modifyNotesToDb(noteId = noteId, title = titleText, message = notesBodyText)
-        } else {
-            notesDetailViewModel.saveNotesToDb(title = titleText, message = notesBodyText)
-        }
-    } else {
-        NotesUtil.showToast(context, "Please enter title and notes")
     }
 }
