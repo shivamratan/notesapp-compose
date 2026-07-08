@@ -59,7 +59,7 @@ fun LoginScreen(modifier: Modifier = Modifier,
         val annotatedText = buildAnnotatedString {
             append(stringResource(R.string.already_have_account))
             withStyle(SpanStyle(color = TitleColor, fontWeight = FontWeight.Bold)) {
-                append(stringResource(R.string.sign_in))
+                append(stringResource(R.string.sign_up))
             }
         }
 
