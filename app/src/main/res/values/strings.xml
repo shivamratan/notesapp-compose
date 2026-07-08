@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NotesApp</string>
+    <string name="already_have_account">"Already have an account? "</string>
+    <string name="sign_in">Sign In</string>
 </resources>
